@@ -15,6 +15,10 @@ Kontrak API yang jadi acuan ada di backend: **`docs/openapi.yaml`** dan
 **`docs/BACKEND_SPEC.md`**. Baca skema Zod di `src/modules/<fitur>/<fitur>.schema.js`
 sebelum membuat atau mengubah formulir.
 
+Ringkasan kontraknya tersedia langsung di repo ini: **`docs/BACKEND_INTEGRATION.md`**
+(salinan `docs/FRONTEND_INTEGRATION.md` milik backend) — bentuk respons, aturan
+form kontak, daftar endpoint, dan keadaan deployment.
+
 ## Komunikasi
 
 - Gunakan **Bahasa Indonesia** saat berkomunikasi dengan saya. Kode, nama variabel,
@@ -169,6 +173,10 @@ npm run preview  # pratinjau hasil build
 npm run lint     # eslint (harus bersih sebelum commit)
 ```
 
+Deploy ke VPS: lihat **`deploy/README.md`** (server block Nginx siap pakai ada di
+`deploy/nginx/threevo.conf`; fallback SPA-nya wajib, tanpa itu `/admin/banners`
+404 saat dibuka langsung).
+
 Backend harus berjalan lebih dulu (`npm run dev` di repo BE). Kalau permintaan gagal
 tanpa respons, `lib/api.js` mencetak petunjuk penyebabnya di console saat development.
 
@@ -178,8 +186,12 @@ tanpa respons, `lib/api.js` mencetak petunjuk penyebabnya di console saat develo
   depan, tetapi panel admin hanya punya tombol terbit/tarik — tanggalnya belum bisa diisi.
 - **Alt text media.** `uploadImage()` sudah menerima `alt` dan backend menyimpannya,
   tetapi belum ada layar yang mengirimkannya.
-- **Konfigurasi deployment.** Belum ada Dockerfile maupun aturan SPA fallback; tanpa
-  fallback, membuka `/admin/banners` langsung akan 404 di server produksi.
+- **CAPTCHA form kontak.** Backend memverifikasi `captchaToken` Turnstile dan menolak
+  token kosong sebelum menghubungi Cloudflare, sedangkan frontend belum memasang
+  widget-nya sama sekali. Akibatnya **form kontak selalu gagal di production**
+  (`400 Verifikasi CAPTCHA gagal`), termasuk saat backend memakai kunci uji.
+  Honeypot `website` sudah ada di `ContactForm.jsx`; yang kurang hanya widget dan
+  `captchaToken` di payload. Lihat `docs/BACKEND_INTEGRATION.md` §5.
 - **Halaman cek resi.** Backend punya `/tracking/:awb` dan setting `tracking_url`;
   halamannya sengaja ditunda.
 - **Logo** masih dirender sebagai teks (lihat catatan di `Logo.jsx`), menunggu aset SVG
