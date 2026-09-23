@@ -1,0 +1,186 @@
+@import 'tailwindcss';
+
+/**
+ * Design tokens Threevo.
+ * Diturunkan dari company profile: ungu/violet sebagai warna utama, krem
+ * off-white sebagai dasar terang, charcoal hangat untuk seksi gelap.
+ * Aksen oranye khusus untuk Sociatrax (divisi social media).
+ */
+@theme {
+  /* Ungu — warna utama brand */
+  --color-brand-50: #f4f2fe;
+  --color-brand-100: #e9e5fd;
+  --color-brand-200: #d5cdfb;
+  --color-brand-300: #b8abf7;
+  --color-brand-400: #9482f0;
+  --color-brand-500: #7a64e8;
+  --color-brand-600: #6c5ae0;
+  --color-brand-700: #5a46c4;
+  --color-brand-800: #4a3a9e;
+  --color-brand-900: #3e327e;
+  --color-brand-950: #251d4f;
+
+  /*
+   * Ink - netral hangat, dari krem sampai charcoal.
+   * ink-500 dipilih agar kontrasnya di atas latar krem mencapai 4.87:1,
+   * melewati ambang WCAG AA (4.5:1) untuk teks isi. Jangan diterangkan.
+   */
+  --color-ink-50: #faf8f5;
+  --color-ink-100: #f2efea;
+  --color-ink-200: #e4dfd7;
+  --color-ink-300: #cfc8bc;
+  --color-ink-400: #a79e90;
+  --color-ink-500: #756c60;
+  --color-ink-600: #5c554c;
+  --color-ink-700: #443f39;
+  --color-ink-800: #35312c;
+  --color-ink-900: #2e2c2a;
+  --color-ink-950: #1a1917;
+
+  /* Aksen Sociatrax */
+  --color-accent-400: #ff6a3d;
+  --color-accent-500: #ff3d00;
+  --color-accent-600: #d93200;
+
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+
+  /* Lebar konten baku */
+  --spacing-gutter: 1.25rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-ink-50 text-ink-700 font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-ink-900 font-semibold tracking-tight text-balance;
+  }
+
+  ::selection {
+    @apply bg-brand-600 text-white;
+  }
+
+  /* Fokus keyboard yang konsisten dan terlihat di kedua latar */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-600;
+  }
+}
+
+@layer components {
+  /* Pembungkus lebar konten yang dipakai semua seksi */
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-(--spacing-gutter);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@layer components {
+  /**
+   * Gaya untuk HTML yang datang dari backend (service.content,
+   * article.content). Karena isinya ditulis admin lewat editor, penataannya
+   * harus lewat selektor turunan, bukan class di tiap elemen.
+   */
+  .prose-threevo {
+    @apply leading-relaxed text-ink-600;
+  }
+
+  .prose-threevo > * + * {
+    @apply mt-5;
+  }
+
+  .prose-threevo > :first-child {
+    @apply mt-0;
+  }
+
+  .prose-threevo h2 {
+    /* scroll-mt memberi ruang untuk header yang menempel saat menuju anchor. */
+    @apply mt-12 scroll-mt-28 text-2xl lg:text-3xl;
+  }
+
+  .prose-threevo h3 {
+    @apply mt-9 text-xl;
+  }
+
+  .prose-threevo h4 {
+    @apply mt-7 text-lg;
+  }
+
+  /* Paragraf tepat setelah heading menempel lebih rapat. */
+  .prose-threevo h2 + p,
+  .prose-threevo h3 + p,
+  .prose-threevo h4 + p {
+    @apply mt-3;
+  }
+
+  .prose-threevo ul {
+    @apply list-disc space-y-2 pl-5;
+  }
+
+  .prose-threevo ol {
+    @apply list-decimal space-y-2 pl-5;
+  }
+
+  .prose-threevo a {
+    @apply text-brand-600 underline underline-offset-2 transition hover:text-brand-700;
+  }
+
+  .prose-threevo strong {
+    @apply font-semibold text-ink-900;
+  }
+
+  .prose-threevo blockquote {
+    @apply border-l-2 border-brand-300 pl-5 italic;
+  }
+
+  .prose-threevo img {
+    @apply rounded-xl;
+  }
+
+  .prose-threevo hr {
+    @apply border-ink-200;
+  }
+
+  .prose-threevo code {
+    @apply rounded bg-ink-100 px-1.5 py-0.5 text-sm;
+  }
+
+  /*
+   * Tabel harga punya sampai lima kolom dan tidak mungkin muat di layar
+   * ponsel. Pembungkusnya digeser keluar dari padding induk agar area
+   * gulirnya selebar layar, sehingga tabel tidak terpotong.
+   */
+  .table-scroll {
+    @apply -mx-5 overflow-x-auto px-5 sm:mx-0 sm:px-0;
+  }
+
+  .prose-threevo table {
+    @apply w-full min-w-[36rem] border-collapse text-left text-sm;
+  }
+
+  .prose-threevo thead th {
+    @apply border-b-2 border-ink-300 pb-3 pr-5 align-bottom font-semibold text-ink-900;
+  }
+
+  .prose-threevo tbody th {
+    @apply border-b border-ink-200 py-3 pr-5 align-top font-medium text-ink-900;
+  }
+
+  .prose-threevo tbody td {
+    @apply border-b border-ink-200 py-3 pr-5 align-top;
+  }
+
+  .prose-threevo caption {
+    @apply pb-3 text-left text-sm text-ink-500;
+  }
+}
